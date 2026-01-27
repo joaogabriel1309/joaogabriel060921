@@ -1,15 +1,15 @@
-CREATE TABLE artista (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE album (
+    id BIGSERIAL PRIMARY KEY,
     nome VARCHAR(200) NOT NULL
 );
 
-CREATE TABLE album (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE artista (
+    id BIGSERIAL PRIMARY KEY,
     nome VARCHAR(200) NOT NULL
 );
 
 CREATE TABLE artista_album (
-    artista_id INT NOT NULL REFERENCES artista(id),
-    album_id INT NOT NULL REFERENCES album(id),
+    artista_id BIGINT NOT NULL REFERENCES artista(id),
+    album_id BIGINT NOT NULL REFERENCES album(id),
     PRIMARY KEY (artista_id, album_id)
 );
