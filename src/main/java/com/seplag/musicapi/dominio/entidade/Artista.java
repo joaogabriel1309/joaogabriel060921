@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "artista")
@@ -28,5 +28,5 @@ public class Artista {
             joinColumns = @JoinColumn(name = "artista_id"),
             inverseJoinColumns = @JoinColumn(name = "album_id")
     )
-    private List<Album> albuns;
+    private Set<Album> albuns;
 }
