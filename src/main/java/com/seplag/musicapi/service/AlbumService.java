@@ -34,24 +34,12 @@ public class AlbumService {
 
         album = albumRepository.save(album);
 
-        return new AlbumResponseDTO(
-                album.getId(),
-                album.getNome(),
-                artistas.stream()
-                        .map(a -> new ArtistaResponseDTO(a.getId(), a.getNome()))
-                        .collect(Collectors.toSet())
-        );
+        return AlbumResponseDTO.fromEntity(album);
     }
 
     public Page<AlbumResponseDTO> listar(Pageable pageable) {
         return albumRepository.findAllWithArtistas(pageable)
-                .map(album -> new AlbumResponseDTO(
-                        album.getId(),
-                        album.getNome(),
-                        album.getArtistas().stream()
-                                .map(a -> new ArtistaResponseDTO(a.getId(), a.getNome()))
-                                .collect(Collectors.toSet())
-                ));
+                .map(AlbumResponseDTO::fromEntity);
     }
 
     @Transactional
