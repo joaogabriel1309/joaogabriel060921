@@ -7,6 +7,7 @@ import com.seplag.musicapi.dto.AlbumResponseDTO;
 import com.seplag.musicapi.dto.ArtistaResponseDTO;
 import com.seplag.musicapi.repository.AlbumRepository;
 import com.seplag.musicapi.repository.ArtistaRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,10 +32,6 @@ public class AlbumService {
         album.setNome(albumRequestDTO.nome());
         album.setArtistas(artistas);
 
-//        for (Artista artista : artistas) {
-//            artista.getAlbuns().add(album);
-//        }
-
         album = albumRepository.save(album);
 
         return new AlbumResponseDTO(
@@ -55,5 +52,24 @@ public class AlbumService {
                                 .map(a -> new ArtistaResponseDTO(a.getId(), a.getNome()))
                                 .collect(Collectors.toSet())
                 ));
+    }
+
+    @Transactional
+    public AlbumResponseDTO atualizar(Long albumId, AlbumRequestDTO albumRequestDTO) {
+      Album album = albumRepository.findById(albumId).orElseThrow(() -> new RuntimeException("Álbum não encontrado"));
+
+      album.setNome(albumRequestDTO.nome());
+
+      album.getArtistas().forEach(a -> a.getAlbuns().remove(album));
+      album.getArtistas().clear();
+
+      Set<Artista> artistas = new HashSet<>(artistaRepository.findAllById(albumRequestDTO.artistasIds()));
+
+        artistas.forEach(artista -> {
+            artista.getAlbuns().add(album);
+            album.getArtistas().add(artista);
+        });
+
+        return AlbumResponseDTO.fromEntity(album);
     }
 }
