@@ -6,7 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "artista")
@@ -22,11 +23,6 @@ public class Artista {
     @Column(nullable = false, length = 200)
     private String nome;
 
-    @ManyToMany
-    @JoinTable(
-            name = "artista_album",
-            joinColumns = @JoinColumn(name = "artista_id"),
-            inverseJoinColumns = @JoinColumn(name = "album_id")
-    )
-    private Set<Album> albuns;
+    @ManyToMany(mappedBy = "artistas")
+    private List<Album> albuns = new ArrayList<>();
 }
