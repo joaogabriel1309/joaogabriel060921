@@ -14,4 +14,6 @@ public interface AlbumRepository extends JpaRepository<Album, Long> {
         left join fetch a.artistas
     """)
     Page<Album> findAllWithArtistas(Pageable pageable);
+
+    boolean existsByArtistasId(Long artistaId);
 }

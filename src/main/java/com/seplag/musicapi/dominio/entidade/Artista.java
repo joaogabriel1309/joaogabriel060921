@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "artista")
@@ -25,4 +26,6 @@ public class Artista {
 
     @ManyToMany(mappedBy = "artistas")
     private List<Album> albuns = new ArrayList<>();
+
+
 }

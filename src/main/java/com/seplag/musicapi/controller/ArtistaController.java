@@ -27,4 +27,22 @@ public class ArtistaController {
     public ResponseEntity<List<ArtistaResponseDTO>> listar() {
         return ResponseEntity.status(HttpStatus.OK).body(artistaService.listar());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ArtistaResponseDTO> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(artistaService.buscarPorId(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ArtistaResponseDTO> atualizar(
+            @PathVariable Long id,
+            @RequestBody @Valid ArtistaRequestDTO dto) {
+        return ResponseEntity.ok(artistaService.atualizar(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remover(@PathVariable Long id) {
+        artistaService.remover(id);
+        return ResponseEntity.noContent().build();
+    }
 }
