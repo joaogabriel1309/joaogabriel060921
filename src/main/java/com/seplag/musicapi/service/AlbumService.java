@@ -4,9 +4,9 @@ import com.seplag.musicapi.dominio.entidade.Album;
 import com.seplag.musicapi.dominio.entidade.Artista;
 import com.seplag.musicapi.dto.AlbumRequestDTO;
 import com.seplag.musicapi.dto.AlbumResponseDTO;
-import com.seplag.musicapi.dto.ArtistaResponseDTO;
 import com.seplag.musicapi.repository.AlbumRepository;
 import com.seplag.musicapi.repository.ArtistaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +37,7 @@ public class AlbumService {
     }
 
     public Page<AlbumResponseDTO> listar(Pageable pageable) {
-        return albumRepository.findAllWithArtistas(pageable)
+        return albumRepository.findAllWithArtista(pageable)
                 .map(AlbumResponseDTO::fromEntity);
     }
 
@@ -59,5 +58,19 @@ public class AlbumService {
         });
 
         return AlbumResponseDTO.fromEntity(album);
+    }
+
+    public AlbumResponseDTO buscarPorId(Long id) {
+        Album album = albumRepository.findByIdWithArtista(id)
+                .orElseThrow(() -> new EntityNotFoundException("Álbum não encontrado"));
+
+        return AlbumResponseDTO.fromEntity(album);
+    }
+
+    public void remover(Long id) {
+        Album album = albumRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Álbum não encontrado"));
+
+        albumRepository.delete(album);
     }
 }

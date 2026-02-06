@@ -3,7 +3,6 @@ package com.seplag.musicapi.controller;
 import com.seplag.musicapi.dto.AlbumRequestDTO;
 import com.seplag.musicapi.dto.AlbumResponseDTO;
 import com.seplag.musicapi.service.AlbumService;
-import jakarta.validation.ReportAsSingleViolation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,8 +30,19 @@ public class AlbumController {
         return ResponseEntity.ok(albumService.listar(pageable));
     }
 
+    @GetMapping("/{id}")
+    public AlbumResponseDTO buscar(@PathVariable Long id) {
+        return albumService.buscarPorId(id);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<AlbumResponseDTO> editar(@PathVariable Long id, @RequestBody @Valid AlbumRequestDTO albumRequestDTO) {
         return ResponseEntity.ok(albumService.atualizar(id, albumRequestDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long id) {
+        albumService.remover(id);
     }
 }

@@ -6,14 +6,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface AlbumRepository extends JpaRepository<Album, Long> {
+import java.util.Optional;
 
+public interface AlbumRepository extends JpaRepository<Album, Long> {
     @Query("""
-        select distinct a
+        select a
         from Album a
         left join fetch a.artistas
     """)
-    Page<Album> findAllWithArtistas(Pageable pageable);
+    Page<Album> findAllWithArtista(Pageable pageable);
+
+    @Query("""
+        select a
+        from Album a
+        left join fetch a.artistas
+        where a.id = :id
+    """)
+    Optional<Album> findByIdWithArtista(Long id);
 
     boolean existsByArtistasId(Long artistaId);
 }
